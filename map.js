@@ -1,1 +1,28 @@
-const grid=document.getElementById("grid");const filtersWrapper=document.getElementById("filters");fetch("data.json").then(response=>response.json()).then(slotData=>{for(let i=slotData.length;i<100;i++){slotData.push({id:i})}slotData.forEach(slot=>{const cell=document.createElement("div");cell.className="slot";if(slot.tag){cell.setAttribute("data-tag",slot.tag)}const tooltip=document.createElement("div");tooltip.className="tooltip";let tooltipText=slot.label||"Emplacement libre";if(slot.tag){tooltipText+=` (${slot.tag})`}tooltip.textContent=tooltipText;if(slot.image&&slot.href){const link=document.createElement("a");link.href=slot.href;link.target="_blank";link.style.display="block";link.style.width="100%";link.style.height="100%";link.style.position="relative";const img=document.createElement("img");img.src=slot.image;img.alt=slot.label||"";img.onload=()=>sendHeightUpdate();link.appendChild(img);link.appendChild(tooltip);cell.appendChild(link)}else{cell.classList.add("empty");cell.textContent="+";cell.style.color="#00ffee";cell.style.fontSize="1.8em";cell.style.fontWeight="bold";cell.appendChild(tooltip)}grid.appendChild(cell)});const filterButtons=document.querySelectorAll("[data-tag]");filterButtons.forEach(btn=>{btn.addEventListener("click",()=>{const selectedTag=btn.getAttribute("data-tag");filterButtons.forEach(b=>b.classList.remove("active"));btn.classList.add("active");document.querySelectorAll(".slot").forEach(slot=>{const tagAttr=slot.getAttribute("data-tag")||"";const tags=tagAttr.split(",").map(t=>t.trim());if(selectedTag==="all"){slot.classList.remove("tag-active","tag-muted")}else if(tags.includes(selectedTag)){slot.classList.add("tag-active");slot.classList.remove("tag-muted")}else{slot.classList.remove("tag-active");slot.classList.add("tag-muted")}});setTimeout(sendHeightUpdate,300)})});new MutationObserver(sendHeightUpdate).observe(grid,{childList:true,subtree:true});new ResizeObserver(sendHeightUpdate).observe(document.body);if(filtersWrapper){new ResizeObserver(sendHeightUpdate).observe(filtersWrapper)}setTimeout(sendHeightUpdate,500);setTimeout(sendHeightUpdate,1500);setTimeout(sendHeightUpdate,3e3)});function sendHeightUpdate(){const height=document.body.scrollHeight||document.documentElement.scrollHeight;parent.postMessage({type:"setHeight",height:height},"*")}window.addEventListener("load",()=>{setTimeout(sendHeightUpdate,300)});
+// Dans votre script.js sur votre page Weebly
+// (Le même fichier qui gère les membres à l'honneur)
+
+document.addEventListener('DOMContentLoaded', () => {
+    // ... (Votre code existant pour les membres à l'honneur et l'animation de réseau) ...
+
+    // AJOUTEZ CE BLOC DE CODE POUR ÉCOUTER LES MESSAGES DE L'IFRAME
+    window.addEventListener('message', (event) => {
+        // !!! SÉCURITÉ IMPORTANTE !!!
+        // Remplacez 'https://bw-n.github.io' par l'ORIGINE EXACTE de votre iframe.
+        // Si l'URL de la carte est 'https://bw-n.github.io/premium-map/', alors l'origine est 'https://bw-n.github.io'.
+        // Si vous avez un doute, laissez '*' pour les tests, mais il est recommandé de spécifier l'origine.
+        if (event.origin !== 'https://bw-n.github.io') { 
+            console.warn("Message ignoré : origine non autorisée.", event.origin);
+            return; 
+        }
+
+        // Vérifiez que le message est bien celui de "setHeight" pour notre iframe
+        if (event.data && event.data.type === 'setHeight') {
+            const iframe = document.getElementById('map-frame'); // Cible l'iframe par son ID
+            if (iframe) {
+                iframe.style.height = event.data.height + 'px';
+                console.log(`Iframe 'map-frame' ajustée à la hauteur: ${event.data.height}px`);
+            }
+        }
+    });
+
+}); // Fin de document.addEventListener('DOMContentLoaded')
