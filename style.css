@@ -1,12 +1,10 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
-  width: 100%;
-  max-width: 1000px;
+  width: 1000px; /* largeur fixe pour 10 slots */
   gap: 6px;
   margin: 0 auto;
   padding: 20px 0;
-  box-sizing: border-box;
 }
 
 .slot {
@@ -121,12 +119,11 @@
   opacity: 1;
   transform: translateX(-50%) translateY(-4px);
 }
-
-/* ✅ Responsive portrait : moins de colonnes, plus d’espace */
 @media screen and (max-width: 768px) and (orientation: portrait) {
   .grid {
     grid-template-columns: repeat(5, 1fr);
     padding: 16px 4px;
+    max-width: 100%;
   }
 
   .slot.empty {
