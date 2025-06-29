@@ -25,20 +25,18 @@
   <!-- 📏 Ajustement de la hauteur dans l'iframe -->
   <script>
     function sendHeight() {
-  const grid = document.getElementById('grid');
-  const filters = document.getElementById('filters');
-  const totalHeight = filters.offsetHeight + grid.offsetHeight + 40; // marge fine
-  parent.postMessage({ type: 'setHeight', height: totalHeight }, '*');
-}
+      const height = document.body.scrollHeight || document.documentElement.scrollHeight;
+      parent.postMessage({ type: 'setHeight', height }, '*');
+    }
 
-window.addEventListener('load', () => {
-  sendHeight();
-  setTimeout(sendHeight, 500);
-  setTimeout(sendHeight, 1500);
-});
+    window.addEventListener('load', () => {
+      sendHeight();
+      setTimeout(sendHeight, 500);
+      setTimeout(sendHeight, 1500);
+      setTimeout(sendHeight, 3000);
+    });
 
-new ResizeObserver(sendHeight).observe(document.body);
-
+    new ResizeObserver(() => sendHeight()).observe(document.body);
   </script>
 
 </body>
