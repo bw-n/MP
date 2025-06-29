@@ -1,28 +1,117 @@
-// Dans votre script.js sur votre page Weebly
-// (Le même fichier qui gère les membres à l'honneur)
+const grid = document.getElementById('grid');
+const filtersWrapper = document.getElementById('filters');
 
-document.addEventListener('DOMContentLoaded', () => {
-    // ... (Votre code existant pour les membres à l'honneur et l'animation de réseau) ...
+// Charge les données JSON externes
+fetch('data.json')
+  .then(response => response.json())
+  .then(slotData => {
+    // Force exactement 100 slots
+    for (let i = slotData.length; i < 100; i++) {
+      slotData.push({ id: i });
+    }
 
-    // AJOUTEZ CE BLOC DE CODE POUR ÉCOUTER LES MESSAGES DE L'IFRAME
-    window.addEventListener('message', (event) => {
-        // !!! SÉCURITÉ IMPORTANTE !!!
-        // Remplacez 'https://bw-n.github.io' par l'ORIGINE EXACTE de votre iframe.
-        // Si l'URL de la carte est 'https://bw-n.github.io/premium-map/', alors l'origine est 'https://bw-n.github.io'.
-        // Si vous avez un doute, laissez '*' pour les tests, mais il est recommandé de spécifier l'origine.
-        if (event.origin !== 'https://bw-n.github.io') { 
-            console.warn("Message ignoré : origine non autorisée.", event.origin);
-            return; 
-        }
+    // Crée les blocs
+    slotData.forEach(slot => {
+      const cell = document.createElement('div');
+      cell.className = 'slot';
 
-        // Vérifiez que le message est bien celui de "setHeight" pour notre iframe
-        if (event.data && event.data.type === 'setHeight') {
-            const iframe = document.getElementById('map-frame'); // Cible l'iframe par son ID
-            if (iframe) {
-                iframe.style.height = event.data.height + 'px';
-                console.log(`Iframe 'map-frame' ajustée à la hauteur: ${event.data.height}px`);
-            }
-        }
+      // Ajoute le tag si présent
+      if (slot.tag) {
+        cell.setAttribute('data-tag', slot.tag);
+      }
+
+      // Infobulle personnalisée
+      const tooltip = document.createElement('div');
+      tooltip.className = 'tooltip';
+
+      let tooltipText = slot.label || 'Emplacement libre';
+      if (slot.tag) {
+        tooltipText += ` (${slot.tag})`;
+      }
+      tooltip.textContent = tooltipText;
+
+      // Si image + lien => rendu normal
+      if (slot.image && slot.href) {
+        const link = document.createElement('a');
+        link.href = slot.href;
+        link.target = '_blank';
+        link.style.display = 'block';
+        link.style.width = '100%';
+        link.style.height = '100%';
+        link.style.position = 'relative';
+
+        const img = document.createElement('img');
+        img.src = slot.image;
+        img.alt = slot.label || '';
+        img.onload = () => sendHeightUpdate(); // Appel pour ajuster la hauteur après le chargement des images
+
+        link.appendChild(img);
+        link.appendChild(tooltip);
+        cell.appendChild(link);
+      } else {
+        // Case vide
+        cell.classList.add('empty');
+        cell.textContent = '+';
+        cell.style.color = '#00ffee';
+        cell.style.fontSize = '1.8em';
+        cell.style.fontWeight = 'bold';
+        cell.appendChild(tooltip);
+      }
+
+      grid.appendChild(cell);
     });
 
-}); // Fin de document.addEventListener('DOMContentLoaded')
+    // Active les filtres par tag (avec support multi-tags)
+    const filterButtons = document.querySelectorAll('[data-tag]');
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const selectedTag = btn.getAttribute('data-tag');
+
+        filterButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        document.querySelectorAll('.slot').forEach(slot => {
+          const tagAttr = slot.getAttribute('data-tag') || '';
+          const tags = tagAttr.split(',').map(t => t.trim());
+
+          if (selectedTag === 'all') {
+            slot.classList.remove('tag-active', 'tag-muted');
+          } else if (tags.includes(selectedTag)) {
+            slot.classList.add('tag-active');
+            slot.classList.remove('tag-muted');
+          } else {
+            slot.classList.remove('tag-active');
+            slot.classList.add('tag-muted');
+          }
+        });
+
+        setTimeout(sendHeightUpdate, 300); // Réajuste la hauteur après le filtrage
+      });
+    });
+
+    // Observateurs de hauteur (MutationObserver pour le contenu, ResizeObserver pour le corps/filtres)
+    new MutationObserver(sendHeightUpdate).observe(grid, { childList: true, subtree: true });
+    new ResizeObserver(sendHeightUpdate).observe(document.body);
+    if (filtersWrapper) {
+      new ResizeObserver(sendHeightUpdate).observe(filtersWrapper);
+    }
+
+    // Recalages supplémentaires (pour s'assurer que tout est rendu)
+    setTimeout(sendHeightUpdate, 500);
+    setTimeout(sendHeightUpdate, 1500);
+    setTimeout(sendHeightUpdate, 3000);
+  });
+
+// Communique la hauteur à l’iframe parent
+function sendHeightUpdate() {
+  const height = document.body.scrollHeight || document.documentElement.scrollHeight;
+  // MODIFICATION ICI : Spécifiez l'origine du parent pour la sécurité
+  parent.postMessage({ type: 'setHeight', height }, 'https://www.blockchain-workers.com');
+}
+
+// Recalcul après chargement complet de la page de la carte
+window.addEventListener('load', () => {
+  setTimeout(sendHeightUpdate, 300); // Petit délai pour s'assurer que tout le rendu initial est fait
+});
+
+// Fin du script pour premium-map
