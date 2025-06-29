@@ -121,14 +121,14 @@
   transform: translateX(-50%) translateY(-4px);
 }
 
-/* 📱 Correction portrait mobile */
+/* ✅ Mobile portrait — force adaptation sur toute la largeur */
 @media screen and (max-width: 768px) and (orientation: portrait) {
   .grid {
-    grid-template-columns: repeat(10, 10vw);
-    width: 100vw;
-    max-width: 100vw;
+    width: 100vw !important;
+    max-width: 100vw !important;
     margin: 0 auto;
     padding: 12px 0;
+    grid-template-columns: repeat(10, 10vw);
   }
 
   .slot {
@@ -138,14 +138,14 @@
   }
 }
 
-/* 📱 Correction paysage mobile : adapte à hauteur limitée */
-@media screen and (max-width: 900px) and (orientation: landscape) {
+/* ✅ Mobile paysage — adapte à la hauteur */
+@media screen and (max-width: 1024px) and (orientation: landscape) {
   .grid {
-    grid-template-columns: repeat(10, min(10vw, 10vh));
-    width: 100vw;
-    max-width: 100vw;
+    width: 100vw !important;
+    max-width: 100vw !important;
     margin: 0 auto;
     padding: 10px 0;
+    grid-template-columns: repeat(10, min(10vw, 10vh));
   }
 
   .slot {
