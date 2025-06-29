@@ -119,23 +119,3 @@
   opacity: 1;
   transform: translateX(-50%) translateY(-4px);
 }
-@media screen and (max-width: 1024px) and (orientation: landscape) {
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    width: 100%;
-    max-width: 960px; /* ou 100vw si tu veux qu'elle prenne toute la largeur */
-    margin: 0 auto;
-    gap: 6px;
-    padding: 8px 4px;
-    box-sizing: border-box;
-  }
-
-  .slot {
-    aspect-ratio: 1 / 1;
-  }
-
-  .slot.empty {
-    font-size: 1em;
-  }
-}
