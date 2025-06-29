@@ -8,6 +8,8 @@
 /* On s'assure que le body de l'iframe n'a pas de marges parasites */
 body {
   margin: 0;
+  /* Add this to prevent any scrollbars from appearing */
+  overflow-x: hidden;
 }
 
 .grid {
@@ -144,41 +146,44 @@ body {
 /* ========================================================== */
 
 @media (max-width: 767px) {
-
   /* On s'assure qu'aucune barre de scroll horizontale n'apparaîtra JAMAIS */
   body {
     overflow-x: hidden !important;
   }
 
   .grid {
-    /* La grille prend TOUTE la largeur, sans marge ni padding horizontal */
+    /* The grid takes FULL width, without horizontal margin or padding */
     width: 100%;
     margin: 0;
-    padding: 10px 1px; /* Juste 1px de chaque côté pour ne pas coller au bord */
+    /* Adjust padding to be just enough to not stick to the edges,
+       or remove it completely if you want true edge-to-edge.
+       For a 1px border/shadow effect, 1px padding might be just right to keep spacing.
+    */
+    padding: 0 1px; /* Changed from 10px 1px to 0 1px to minimize impact */
 
-    /* On annule les contraintes de largeur du mode ordinateur */
+    /* We remove the desktop width constraints */
     min-width: 0;
     max-width: none;
 
-    /* On réduit l'espace au strict minimum */
-    gap: 1px;
+    /* Reduce the gap to the absolute minimum for tight mobile layout */
+    gap: 1px; /* Keep this small, it helps with column calculation */
   }
 
   /*
    * =================================================
-   * LA CORRECTION LA PLUS IMPORTANTE EST ICI
+   * THE MOST IMPORTANT CORRECTION IS HERE
    * =================================================
-   * On remplace la "border" qui cause des erreurs de calcul de pixels
-   * par une "box-shadow" qui a le même aspect mais ne prend PAS de place
-   * dans le calcul de la largeur totale.
-  */
+   * We replace the "border" that causes pixel calculation errors
+   * with a "box-shadow" that has the same appearance but does NOT take up space
+   * in the total width calculation.
+   */
   .slot {
-    border: none; /* <-- On SUPPRIME la bordure originale */
-    
-    /* On la recrée visuellement avec une ombre portée INTERNE */
-    box-shadow: inset 0 0 0 1px #00ffee;
-    
-    /* On garde votre style de base */
+    border: none; /* <-- We REMOVE the original border */
+
+    /* We visually recreate it with an INSET box-shadow */
+    box-shadow: inset 0 0 0 1px #00ffee; /* This correctly simulates a 1px border */
+
+    /* We keep your base style */
     background: repeating-linear-gradient(
       45deg,
       #111 0px,
@@ -186,5 +191,25 @@ body {
       #1c1c1c 4px,
       #1c1c1c 8px
     );
+  }
+
+  /* Re-adjust hover box-shadow for mobile if necessary, to ensure it doesn't cause overflow */
+  .slot:hover {
+    /* Adjust or simplify this if it causes issues on very small screens */
+    box-shadow:
+      inset 0 0 0 1px #00ffee, /* Keep the 1px 'border' */
+      0 0 10px #00ffeeaa, /* Slightly smaller glow to avoid overflow */
+      0 0 2px #00ffee55 inset; /* Smaller inner glow */
+  }
+
+  /* Ensure tag-active also uses box-shadow to prevent layout shifts */
+  .slot.tag-active {
+    outline: none; /* Remove outline */
+    box-shadow:
+      inset 0 0 0 3px #00ffee, /* Simulate 3px border with inset shadow */
+      0 0 18px #00ffeeaa, /* Match hover glow if desired */
+      0 0 4px #00ffee55 inset;
+    transform: scale(1.05); /* Keep transform */
+    z-index: 1;
   }
 }
