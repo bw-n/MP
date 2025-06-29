@@ -140,26 +140,51 @@ body {
 }
 
 /* ========================================================== */
-/* --- AJOUT : CORRECTION POUR L'AFFICHAGE SUR MOBILE --- */
+/* --- AJOUT : CORRECTION DÉFINITIVE POUR MOBILE --- */
 /* ========================================================== */
 
 @media (max-width: 767px) {
-  /* On empêche TOUT scroll horizontal sur le corps de l'iframe */
+
+  /* On s'assure qu'aucune barre de scroll horizontale n'apparaîtra JAMAIS */
   body {
-    overflow-x: hidden;
+    overflow-x: hidden !important;
   }
 
   .grid {
-    /* La grille prend 100% de la largeur de son parent (le body) */
+    /* La grille prend TOUTE la largeur, sans marge ni padding horizontal */
     width: 100%;
-    
-    /* On définit un espacement minimaliste */
-    gap: 2px;
-    
-    /* Le padding est quasi-nul pour ne pas perdre de place */
-    padding: 10px 2px;
-    
-    /* On s'assure qu'il n'y a pas de largeur minimale qui force le débordement */
+    margin: 0;
+    padding: 10px 1px; /* Juste 1px de chaque côté pour ne pas coller au bord */
+
+    /* On annule les contraintes de largeur du mode ordinateur */
     min-width: 0;
+    max-width: none;
+
+    /* On réduit l'espace au strict minimum */
+    gap: 1px;
+  }
+
+  /*
+   * =================================================
+   * LA CORRECTION LA PLUS IMPORTANTE EST ICI
+   * =================================================
+   * On remplace la "border" qui cause des erreurs de calcul de pixels
+   * par une "box-shadow" qui a le même aspect mais ne prend PAS de place
+   * dans le calcul de la largeur totale.
+  */
+  .slot {
+    border: none; /* <-- On SUPPRIME la bordure originale */
+    
+    /* On la recrée visuellement avec une ombre portée INTERNE */
+    box-shadow: inset 0 0 0 1px #00ffee;
+    
+    /* On garde votre style de base */
+    background: repeating-linear-gradient(
+      45deg,
+      #111 0px,
+      #111 4px,
+      #1c1c1c 4px,
+      #1c1c1c 8px
+    );
   }
 }
