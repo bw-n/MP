@@ -140,3 +140,28 @@
   }
 }
 
+/* 🎯 Responsive portrait */
+@media screen and (max-width: 480px) and (orientation: portrait) {
+  .grid {
+    grid-template-columns: repeat(5, 1fr);
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+    padding: 12px 4px;
+    gap: 6px;
+    box-sizing: border-box;
+  }
+}
+
+/* 🎯 Responsive paysage */
+@media screen and (max-width: 1024px) and (orientation: landscape) {
+  .grid {
+    grid-template-columns: repeat(10, 1fr);
+    width: 100%;
+    max-width: 100vw;
+    margin: 0 auto;
+    padding: 12px 6px;
+    gap: 6px;
+    box-sizing: border-box;
+  }
+}
