@@ -1,11 +1,11 @@
 .grid {
   display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  width: 1000px; /* largeur fixe pour 10 slots */
+  grid-template-columns: repeat(10, 94.6px); /* slots fixes */
   gap: 6px;
+  width: calc(10 * 94.6px + 9 * 6px); /* total réel = ~1000px */
   margin: 0 auto;
-  padding: 20px 0;
 }
+
 
 .slot {
   background: repeating-linear-gradient(
