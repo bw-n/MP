@@ -143,37 +143,41 @@ body {
 
 ---
 
-## Corrections pour Mobile (max-width: 767px) - Ultra-Agressif
+## Corrections pour Mobile (max-width: 767px)
 
 ```css
 @media (max-width: 767px) {
   body {
-    overflow-x: hidden !important; /* Pas de barre de défilement horizontale */
+    overflow-x: hidden !important; /* On s'assure qu'aucune barre de scroll horizontale n'apparaîtra JAMAIS */
   }
 
   .grid {
     width: 100%;
     margin: 0;
-    padding: 0; /* Pas de padding sur la grille */
-    
-    /* LA SOLUTION LA PLUS AGRESSIVE POUR FORCER LES 10 COLONNES */
-    display: grid !important; /* S'assurer que le display est bien grid */
-    grid-template-columns: repeat(10, 10vw) !important; /* Utilisez 10vw pour 10 colonnes, 10% de la largeur du viewport */
-    gap: 0 !important; /* Pas de gap, pour éliminer toute ambiguïté */
-    
-    min-width: 0 !important;
-    max-width: none !important;
+    padding: 0; /* TRÈS IMPORTANT : Supprimer tout padding du conteneur grid sur mobile pour un calcul précis */
+
+    /* LA CORRECTION MAJEURE ET DÉFINITIVE POUR MOBILE */
+    /* Pour forcer les 10 colonnes :
+       1. Réduire le gap à 0px ou 0.5px (0.5px est souvent suffisant pour des micro-marges,
+          sinon 0px assure l'absence totale d'espace qui pourrait causer des soucis).
+       2. Utiliser 99.999% pour le calcul, pour donner une marge de manœuvre infime
+          et éviter les problèmes d'arrondi des navigateurs. */
+    gap: 0.5px; /* On essaie 0.5px pour garder un minimum d'espace. Si ça ne passe toujours pas, mettez 0px. */
+
+    /* Formule de calcul des colonnes la plus robuste possible */
+    /* (99.999% de la largeur du conteneur - (9 * valeur du gap)) divisé par 10 colonnes */
+    grid-template-columns: repeat(10, calc((99.999% - 9 * 0.5px) / 10));
+
+    min-width: 0;
+    max-width: none;
   }
 
   .slot {
-    border: none !important; /* Enlever la bordure */
-    box-shadow: inset 0 0 0 1px #00ffee !important; /* La recréer visuellement */
+    border: none; /* <-- On SUPPRIME la bordure originale qui pose problème */
+    /* On la recrée visuellement avec une ombre portée INTERNE, qui n'affecte PAS le calcul de largeur */
+    box-shadow: inset 0 0 0 1px #00ffee;
 
-    /* S'assurer que le slot lui-même est bien à 100% de la cellule de grille */
-    width: 100% !important; 
-    height: 100% !important;
-
-    /* Vos styles existants pour le slot */
+    /* On garde vos styles de base pour le slot */
     background: repeating-linear-gradient(
       45deg,
       #111 0px,
@@ -196,13 +200,14 @@ body {
     transform: scale(1.07);
     z-index: 1;
     box-shadow:
-      inset 0 0 0 1px #00ffee,
-      0 0 10px #00ffeeaa,
+      inset 0 0 0 1px #00ffee, /* Garde la "bordure" de 1px */
+      0 0 10px #00ffeeaa, /* Réduit légèrement le glow pour éviter le débordement */
       0 0 2px #00ffee55 inset;
   }
 
   .slot.tag-active {
-    outline: none !important;
+    outline: none; /* Supprime l'outline qui peut aussi causer des soucis */
+    /* Simule la bordure de 3px avec un inset shadow et ajoute un glow */
     box-shadow:
       inset 0 0 0 3px #00ffee,
       0 0 18px #00ffeeaa,
