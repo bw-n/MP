@@ -104,11 +104,12 @@ fetch('data.json')
 
 // Communique la hauteur à l’iframe parent
 function sendHeightUpdate() {
-  const height = document.body.scrollHeight || document.documentElement.scrollHeight;
+  let height = document.body.scrollHeight || document.documentElement.scrollHeight;
+
+  // ✅ Correction spéciale mobile portrait : limite la hauteur si elle dépasse la taille visible
+  if (window.matchMedia('(orientation: portrait)').matches && window.innerWidth <= 768) {
+    height = Math.min(height, window.innerHeight);
+  }
+
   parent.postMessage({ type: 'setHeight', height }, '*');
 }
-
-// Recalcul après chargement complet
-window.addEventListener('load', () => {
-  setTimeout(sendHeightUpdate, 300);
-});
