@@ -102,11 +102,11 @@ fetch('data.json')
     setTimeout(sendHeightUpdate, 3000);
   });
 
-// Communique la hauteur à l’iframe parent
 function sendHeightUpdate() {
   const height = document.body.scrollHeight || document.documentElement.scrollHeight;
-  parent.postMessage({ type: 'setHeight', height }, '*');
+  parent.postMessage({ type: 'setHeight', height: height + 40 }, '*'); // ← ici, on ajoute +40px
 }
+
 
 // Recalcul après chargement complet
 window.addEventListener('load', () => {
