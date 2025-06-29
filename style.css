@@ -143,41 +143,37 @@ body {
 
 ---
 
-## Corrections pour Mobile (max-width: 767px)
+## Corrections for Mobile (max-width: 767px) - Aggressive Approach
 
 ```css
 @media (max-width: 767px) {
   body {
-    overflow-x: hidden !important; /* On s'assure qu'aucune barre de scroll horizontale n'apparaîtra JAMAIS */
+    overflow-x: hidden !important; /* Ensure no horizontal scrollbar EVER */
   }
 
   .grid {
     width: 100%;
     margin: 0;
-    padding: 0; /* TRÈS IMPORTANT : Supprimer tout padding du conteneur grid sur mobile pour un calcul précis */
+    padding: 0; /* ABSOLUTELY NO PADDING on the grid container for precise calculation */
 
-    /* LA CORRECTION MAJEURE ET DÉFINITIVE POUR MOBILE */
-    /* Pour forcer les 10 colonnes :
-       1. Réduire le gap à 0px ou 0.5px (0.5px est souvent suffisant pour des micro-marges,
-          sinon 0px assure l'absence totale d'espace qui pourrait causer des soucis).
-       2. Utiliser 99.999% pour le calcul, pour donner une marge de manœuvre infime
-          et éviter les problèmes d'arrondi des navigateurs. */
-    gap: 0.5px; /* On essaie 0.5px pour garder un minimum d'espace. Si ça ne passe toujours pas, mettez 0px. */
+    /* THE MOST AGGRESSIVE CORRECTION FOR MOBILE */
+    /* Remove gap entirely to eliminate its influence on rounding errors. */
+    gap: 0; /* <--- Set gap to 0 */
 
-    /* Formule de calcul des colonnes la plus robuste possible */
-    /* (99.999% de la largeur du conteneur - (9 * valeur du gap)) divisé par 10 colonnes */
-    grid-template-columns: repeat(10, calc((99.999% - 9 * 0.5px) / 10));
+    /* Explicitly set column width to exactly 10% of the grid container's width. */
+    /* This overrides the '1fr' on mobile and forces 10 equal columns. */
+    grid-template-columns: repeat(10, 10%); /* <--- Force 10% width per column */
 
     min-width: 0;
     max-width: none;
   }
 
   .slot {
-    border: none; /* <-- On SUPPRIME la bordure originale qui pose problème */
-    /* On la recrée visuellement avec une ombre portée INTERNE, qui n'affecte PAS le calcul de largeur */
+    border: none; /* <--- REMOVE original border */
+    /* Visually recreate border with an INSET box-shadow, which doesn't affect layout width. */
     box-shadow: inset 0 0 0 1px #00ffee;
 
-    /* On garde vos styles de base pour le slot */
+    /* Your existing slot background and other styles */
     background: repeating-linear-gradient(
       45deg,
       #111 0px,
@@ -195,19 +191,19 @@ body {
     z-index: 0;
   }
 
-  /* Ajustements pour les états hover et tag-active pour éviter les problèmes de débordement sur mobile */
+  /* Adjustments for hover and tag-active states to prevent overflow on mobile */
   .slot:hover {
     transform: scale(1.07);
     z-index: 1;
     box-shadow:
-      inset 0 0 0 1px #00ffee, /* Garde la "bordure" de 1px */
-      0 0 10px #00ffeeaa, /* Réduit légèrement le glow pour éviter le débordement */
+      inset 0 0 0 1px #00ffee, /* Keep the 1px 'border' */
+      0 0 10px #00ffeeaa, /* Slightly reduce glow to prevent overflow */
       0 0 2px #00ffee55 inset;
   }
 
   .slot.tag-active {
-    outline: none; /* Supprime l'outline qui peut aussi causer des soucis */
-    /* Simule la bordure de 3px avec un inset shadow et ajoute un glow */
+    outline: none; /* Remove outline which can cause issues */
+    /* Simulate 3px border with inset shadow and add glow */
     box-shadow:
       inset 0 0 0 3px #00ffee,
       0 0 18px #00ffeeaa,
