@@ -8,7 +8,7 @@
 /* On s'assure que le body de l'iframe n'a pas de marges parasites */
 body {
   margin: 0;
-  /* Assure qu'aucune barre de défilement horizontale n'apparaîtra, même sur de très petits écrans */
+  /* Add this to prevent any scrollbars from appearing */
   overflow-x: hidden;
 }
 
@@ -141,43 +141,49 @@ body {
   transform: translateX(-50%) translateY(-4px);
 }
 
----
+/* ========================================================== */
+/* --- AJOUT : CORRECTION DÉFINITIVE POUR MOBILE --- */
+/* ========================================================== */
 
-## Corrections pour Mobile (max-width: 767px)
-
-```css
 @media (max-width: 767px) {
+  /* On s'assure qu'aucune barre de scroll horizontale n'apparaîtra JAMAIS */
   body {
-    overflow-x: hidden !important; /* On s'assure qu'aucune barre de scroll horizontale n'apparaîtra JAMAIS */
+    overflow-x: hidden !important;
   }
 
   .grid {
+    /* The grid takes FULL width, without horizontal margin or padding */
     width: 100%;
     margin: 0;
-    padding: 0; /* TRÈS IMPORTANT : Supprimer tout padding du conteneur grid sur mobile pour un calcul précis */
+    /* Adjust padding to be just enough to not stick to the edges,
+       or remove it completely if you want true edge-to-edge.
+       For a 1px border/shadow effect, 1px padding might be just right to keep spacing.
+    */
+    padding: 0 1px; /* Changed from 10px 1px to 0 1px to minimize impact */
 
-    /* LA CORRECTION MAJEURE ET DÉFINITIVE POUR MOBILE */
-    /* Pour forcer les 10 colonnes :
-       1. Réduire le gap à 0px ou 0.5px (0.5px est souvent suffisant pour des micro-marges,
-          sinon 0px assure l'absence totale d'espace qui pourrait causer des soucis).
-       2. Utiliser 99.999% pour le calcul, pour donner une marge de manœuvre infime
-          et éviter les problèmes d'arrondi des navigateurs. */
-    gap: 0.5px; /* On essaie 0.5px pour garder un minimum d'espace. Si ça ne passe toujours pas, mettez 0px. */
-
-    /* Formule de calcul des colonnes la plus robuste possible */
-    /* (99.999% de la largeur du conteneur - (9 * valeur du gap)) divisé par 10 colonnes */
-    grid-template-columns: repeat(10, calc((99.999% - 9 * 0.5px) / 10));
-
+    /* We remove the desktop width constraints */
     min-width: 0;
     max-width: none;
+
+    /* Reduce the gap to the absolute minimum for tight mobile layout */
+    gap: 1px; /* Keep this small, it helps with column calculation */
   }
 
+  /*
+   * =================================================
+   * THE MOST IMPORTANT CORRECTION IS HERE
+   * =================================================
+   * We replace the "border" that causes pixel calculation errors
+   * with a "box-shadow" that has the same appearance but does NOT take up space
+   * in the total width calculation.
+   */
   .slot {
-    border: none; /* <-- On SUPPRIME la bordure originale qui pose problème */
-    /* On la recrée visuellement avec une ombre portée INTERNE, qui n'affecte PAS le calcul de largeur */
-    box-shadow: inset 0 0 0 1px #00ffee;
+    border: none; /* <-- We REMOVE the original border */
 
-    /* On garde vos styles de base pour le slot */
+    /* We visually recreate it with an INSET box-shadow */
+    box-shadow: inset 0 0 0 1px #00ffee; /* This correctly simulates a 1px border */
+
+    /* We keep your base style */
     background: repeating-linear-gradient(
       45deg,
       #111 0px,
@@ -185,34 +191,25 @@ body {
       #1c1c1c 4px,
       #1c1c1c 8px
     );
-    aspect-ratio: 1 / 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: visible;
-    transition: transform 0.2s ease, box-shadow 0.3s ease;
-    position: relative;
-    z-index: 0;
   }
 
-  /* Ajustements pour les états hover et tag-active pour éviter les problèmes de débordement sur mobile */
+  /* Re-adjust hover box-shadow for mobile if necessary, to ensure it doesn't cause overflow */
   .slot:hover {
-    transform: scale(1.07);
-    z-index: 1;
+    /* Adjust or simplify this if it causes issues on very small screens */
     box-shadow:
-      inset 0 0 0 1px #00ffee, /* Garde la "bordure" de 1px */
-      0 0 10px #00ffeeaa, /* Réduit légèrement le glow pour éviter le débordement */
-      0 0 2px #00ffee55 inset;
+      inset 0 0 0 1px #00ffee, /* Keep the 1px 'border' */
+      0 0 10px #00ffeeaa, /* Slightly smaller glow to avoid overflow */
+      0 0 2px #00ffee55 inset; /* Smaller inner glow */
   }
 
+  /* Ensure tag-active also uses box-shadow to prevent layout shifts */
   .slot.tag-active {
-    outline: none; /* Supprime l'outline qui peut aussi causer des soucis */
-    /* Simule la bordure de 3px avec un inset shadow et ajoute un glow */
+    outline: none; /* Remove outline */
     box-shadow:
-      inset 0 0 0 3px #00ffee,
-      0 0 18px #00ffeeaa,
+      inset 0 0 0 3px #00ffee, /* Simulate 3px border with inset shadow */
+      0 0 18px #00ffeeaa, /* Match hover glow if desired */
       0 0 4px #00ffee55 inset;
-    transform: scale(1.05);
+    transform: scale(1.05); /* Keep transform */
     z-index: 1;
   }
 }
