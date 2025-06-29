@@ -25,7 +25,10 @@
   <!-- 📏 Ajustement de la hauteur dans l'iframe -->
   <script>
     function sendHeight() {
-      const height = document.body.scrollHeight || document.documentElement.scrollHeight;
+      const grid = document.getElementById('grid');
+      const filters = document.getElementById('filters');
+      const buffer = 60; // marge de sécurité
+      const height = filters.offsetHeight + grid.offsetHeight + buffer;
       parent.postMessage({ type: 'setHeight', height }, '*');
     }
 
@@ -36,7 +39,7 @@
       setTimeout(sendHeight, 3000);
     });
 
-    new ResizeObserver(() => sendHeight()).observe(document.body);
+    new ResizeObserver(sendHeight).observe(document.body);
   </script>
 
 </body>
