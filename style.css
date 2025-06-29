@@ -12,13 +12,28 @@ body {
   overflow-x: hidden;
 }
 
+/* Réinitialisation fondamentale du calcul des largeurs */
+*,
+*::before,
+*::after {
+  box-sizing: border-box; /* C'est déjà bien, gardons-le */
+}
+
+/* On s'assure que le body de l'iframe n'a pas de marges parasites */
+body {
+  margin: 0;
+  /* Gardons overflow-x: hidden ici pour le contenu de l'iframe */
+  overflow-x: hidden;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
+  /* RETIRER la width: 1000px; fixe ici. La grille doit être fluide par défaut. */
+  width: 100%; /* La grille doit toujours prendre 100% de la largeur disponible de son parent */
+  max-width: 1000px; /* Utiliser max-width si vous voulez une limite supérieure */
   gap: 6px;
-  width: 90%;
-  max-width: 900px;
-  margin: auto;
+  margin: 0 auto; /* Pour centrer la grille */
   padding: 20px 0;
 }
 
@@ -30,7 +45,7 @@ body {
     #1c1c1c 4px,
     #1c1c1c 8px
   );
-  border: 1px solid #00ffee;
+  border: 1px solid #00ffee; /* Garder la bordure par défaut */
   box-shadow:
     inset 0 0 8px rgba(0, 255, 255, 0.1),
     0 0 6px rgba(0, 255, 255, 0.15);
@@ -53,7 +68,6 @@ body {
 }
 
 .slot img {
-  display: block; /* Évite les espaces fantômes sous les images */
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -74,13 +88,8 @@ body {
 }
 
 @keyframes pulse {
-  0%,
-  100% {
-    background-color: #141414;
-  }
-  50% {
-    background-color: #222;
-  }
+  0%, 100% { background-color: #141414; }
+  50% { background-color: #222; }
 }
 
 #filters button {
@@ -141,9 +150,77 @@ body {
   transform: translateX(-50%) translateY(-4px);
 }
 
----
+/* Styles spécifiques pour mobile */
+@media (max-width: 767px) {
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden !important;
+  }
 
-## Corrections pour Mobile (max-width: 767px) - 9,5 Colonnes
+  .grid {
+    width: 100%; /* S'assure que la grille prend 100% de la largeur disponible sur mobile */
+    margin: 0 auto; /* Centrage sur mobile */
+    padding: 0 10px; /* Ajout d'un padding pour que la grille ne soit pas collée aux bords de l'iframe */
+    gap: 5px; /* Ajustez le gap si 1px est trop serré */
+    /* Ces règles étaient déjà bonnes, je les garde pour ne pas les réintroduire si elles sont importantes */
+    grid-template-columns: repeat(10, 1fr) !important;
+    min-width: 0 !important;
+    max-width: none !important;
+  }
+
+  .slot {
+    border: none !important; /* Suppression de la bordure */
+    /* La box-shadow inset recrée la bordure visuelle sans affecter la largeur */
+    box-shadow: inset 0 0 0 1px #00ffee !important;
+
+    /* Pas besoin de forcer width/height: 100% car aspect-ratio et grid gèrent ça */
+    /* width: 100% !important; */
+    /* height: 100% !important; */
+
+    /* Reprise des styles de background pour override ceux du slot par défaut si besoin */
+    background: repeating-linear-gradient(
+      45deg,
+      #111 0px,
+      #111 4px,
+      #1c1c1c 4px,
+      #1c1c1c 8px
+    );
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    position: relative;
+    z-index: 0;
+  }
+
+  .slot:hover {
+    transform: scale(1.07);
+    z-index: 1;
+    box-shadow:
+      inset 0 0 0 1px #00ffee,
+      0 0 10px #00ffeeaa,
+      0 0 2px #00ffee55 inset;
+  }
+
+  .slot.tag-active {
+    outline: none !important;
+    box-shadow:
+      inset 0 0 0 3px #00ffee,
+      0 0 18px #00ffeeaa,
+      0 0 4px #00ffee55 inset;
+    transform: scale(1.05);
+    z-index: 1;
+  }
+
+  #filters button {
+    /* Ajustement de la taille des boutons sur mobile si nécessaire */
+    padding: 6px 10px;
+    font-size: 0.85em;
+  }
+}
 
 ```css
 @media (max-width: 767px) {
