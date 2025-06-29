@@ -156,10 +156,17 @@ body {
     margin: 0;
     padding: 0; /* TRÈS IMPORTANT : Supprimer tout padding du conteneur grid sur mobile pour un calcul précis */
 
-    /* LA CORRECTION LA PLUS IMPORTANTE : Calcul explicite de la largeur des colonnes */
-    /* 100% de la largeur du conteneur - (9 * 1px de gap) divisé par 10 colonnes */
-    grid-template-columns: repeat(10, calc((100% - 9 * 1px) / 10));
-    gap: 1px; /* Espacement minimal entre les colonnes */
+    /* LA CORRECTION MAJEURE ET DÉFINITIVE POUR MOBILE */
+    /* Pour forcer les 10 colonnes :
+       1. Réduire le gap à 0px ou 0.5px (0.5px est souvent suffisant pour des micro-marges,
+          sinon 0px assure l'absence totale d'espace qui pourrait causer des soucis).
+       2. Utiliser 99.999% pour le calcul, pour donner une marge de manœuvre infime
+          et éviter les problèmes d'arrondi des navigateurs. */
+    gap: 0.5px; /* On essaie 0.5px pour garder un minimum d'espace. Si ça ne passe toujours pas, mettez 0px. */
+
+    /* Formule de calcul des colonnes la plus robuste possible */
+    /* (99.999% de la largeur du conteneur - (9 * valeur du gap)) divisé par 10 colonnes */
+    grid-template-columns: repeat(10, calc((99.999% - 9 * 0.5px) / 10));
 
     min-width: 0;
     max-width: none;
