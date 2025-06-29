@@ -143,37 +143,37 @@ body {
 
 ---
 
-## Corrections for Mobile (max-width: 767px) - Aggressive Approach
+## Corrections pour Mobile (max-width: 767px) - Ultra-Agressif
 
 ```css
 @media (max-width: 767px) {
   body {
-    overflow-x: hidden !important; /* Ensure no horizontal scrollbar EVER */
+    overflow-x: hidden !important; /* Pas de barre de défilement horizontale */
   }
 
   .grid {
     width: 100%;
     margin: 0;
-    padding: 0; /* ABSOLUTELY NO PADDING on the grid container for precise calculation */
-
-    /* THE MOST AGGRESSIVE CORRECTION FOR MOBILE */
-    /* Remove gap entirely to eliminate its influence on rounding errors. */
-    gap: 0; /* <--- Set gap to 0 */
-
-    /* Explicitly set column width to exactly 10% of the grid container's width. */
-    /* This overrides the '1fr' on mobile and forces 10 equal columns. */
-    grid-template-columns: repeat(10, 10%); /* <--- Force 10% width per column */
-
-    min-width: 0;
-    max-width: none;
+    padding: 0; /* Pas de padding sur la grille */
+    
+    /* LA SOLUTION LA PLUS AGRESSIVE POUR FORCER LES 10 COLONNES */
+    display: grid !important; /* S'assurer que le display est bien grid */
+    grid-template-columns: repeat(10, 10vw) !important; /* Utilisez 10vw pour 10 colonnes, 10% de la largeur du viewport */
+    gap: 0 !important; /* Pas de gap, pour éliminer toute ambiguïté */
+    
+    min-width: 0 !important;
+    max-width: none !important;
   }
 
   .slot {
-    border: none; /* <--- REMOVE original border */
-    /* Visually recreate border with an INSET box-shadow, which doesn't affect layout width. */
-    box-shadow: inset 0 0 0 1px #00ffee;
+    border: none !important; /* Enlever la bordure */
+    box-shadow: inset 0 0 0 1px #00ffee !important; /* La recréer visuellement */
 
-    /* Your existing slot background and other styles */
+    /* S'assurer que le slot lui-même est bien à 100% de la cellule de grille */
+    width: 100% !important; 
+    height: 100% !important;
+
+    /* Vos styles existants pour le slot */
     background: repeating-linear-gradient(
       45deg,
       #111 0px,
@@ -191,19 +191,18 @@ body {
     z-index: 0;
   }
 
-  /* Adjustments for hover and tag-active states to prevent overflow on mobile */
+  /* Ajustements pour les états hover et tag-active pour éviter les problèmes de débordement sur mobile */
   .slot:hover {
     transform: scale(1.07);
     z-index: 1;
     box-shadow:
-      inset 0 0 0 1px #00ffee, /* Keep the 1px 'border' */
-      0 0 10px #00ffeeaa, /* Slightly reduce glow to prevent overflow */
+      inset 0 0 0 1px #00ffee,
+      0 0 10px #00ffeeaa,
       0 0 2px #00ffee55 inset;
   }
 
   .slot.tag-active {
-    outline: none; /* Remove outline which can cause issues */
-    /* Simulate 3px border with inset shadow and add glow */
+    outline: none !important;
     box-shadow:
       inset 0 0 0 3px #00ffee,
       0 0 18px #00ffeeaa,
