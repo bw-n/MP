@@ -1,11 +1,12 @@
 .grid {
-  display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  gap: 6px;
-  width: 90%;
-  max-width: 900px;
-  margin: auto;
-  padding: 20px 0;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 6px;
+  width: 100vw;
+  max-width: unset;
+  margin: auto;
+  padding: 20px 0;
+  box-sizing: border-box;
 }
 
 .slot {
@@ -119,4 +120,14 @@
 .slot a:hover .tooltip {
   opacity: 1;
   transform: translateX(-50%) translateY(-4px);
+}
+@media (max-width: 480px) {
+  .slot {
+    font-size: 1.2em;
+    border-width: 0.5px;
+  }
+
+  .tooltip {
+    font-size: 0.65em;
+  }
 }
