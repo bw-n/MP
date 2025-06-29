@@ -120,3 +120,30 @@
   opacity: 1;
   transform: translateX(-50%) translateY(-4px);
 }
+/* ======================================= */
+/* AJUSTEMENT POUR MOBILES (MODE PORTRAIT) */
+/* ======================================= */
+
+@media (max-width: 767px) {
+  .grid {
+    /* On force la grille à prendre quasiment toute la largeur de l'écran */
+    width: 95vw; /* 95% de la largeur de la fenêtre (vw = viewport width) */
+    
+    /* On réduit l'espace entre les cases pour gagner de la place */
+    gap: 4px;
+    
+    /* On enlève le padding pour maximiser l'espace disponible */
+    padding: 10px 0;
+  }
+
+  .slot.empty {
+    /* On peut réduire un peu la taille du "+" pour que ce soit plus joli */
+    font-size: 1.5em;
+  }
+  
+  #filters button {
+    /* On s'assure que les boutons ne sont pas trop gros */
+    padding: 6px 10px;
+    font-size: 0.9em;
+  }
+}
