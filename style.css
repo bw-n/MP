@@ -7,17 +7,17 @@
 
 /* On s'assure que le body de l'iframe n'a pas de marges parasites */
 body {
-  margin: 0;
-  overflow-x: hidden; /* Important pour le contenu de l'iframe aussi */
-  /* Ajoutez si besoin un min-height pour que le scroll de l'iframe ne disparaisse pas */
-  min-height: 100vh; /* Ou une hauteur fixe si le contenu n'est pas dynamique */
+  margin: 0 !important; /* <--- AJOUT IMPORTANT ICI ! */
+  padding: 0 !important; /* <--- ET ICI POUR ÊTRE SÛR */
+  overflow-x: hidden; /* Assure qu'aucune barre de défilement horizontale n'apparaîtra */
+  /* min-height: 100vh; Gardez ou retirez selon si le contenu est dynamique ou non */
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   gap: 6px;
-  width: 90%; /* Gardez 90% pour le bureau, ou ajustez si l'iframe est plus large */
+  width: 90%;
   max-width: 900px;
   margin: auto;
   padding: 20px 0;
@@ -157,8 +157,8 @@ body {
     margin: 0;
     padding: 0; /* Pas de padding sur la grille elle-même */
     
-    /* MAINTENANT ÇA DEVRAIT FONCTIONNER : L'iframe est à 100vw, donc 100% de son contenu est 100vw */
-    grid-template-columns: repeat(10, 10%) !important; /* Chaque colonne prend 10% de la largeur de la grille (qui est 100% de l'iframe) */
+    /* On revient à 10% car le body de l'iframe sera bien à 100% de sa propre largeur */
+    grid-template-columns: repeat(10, 10%) !important; 
     gap: 0 !important; /* Pas de gap, le plus sûr pour les arrondis */
     
     min-width: 0 !important;
