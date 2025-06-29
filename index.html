@@ -1,269 +1,43 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ma Carte Weebly</title>
-    <style>
-        /* Base Grid and Slot Styles */
-        #grid {
-            display: grid;
-            grid-template-columns: repeat(10, 1fr); /* 10 columns by default */
-            grid-gap: 5px;
-            width: 100%;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .slot {
-            position: relative;
-            aspect-ratio: 1 / 1; /* Keep slots square */
-            border: 1px solid #ccc;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            cursor: pointer;
-            background-color: #f0f0f0;
-            transition: opacity 0.3s ease, transform 0.3s ease; /* Add transition for filtering */
-        }
-
-        .slot.empty {
-            background-color: #333;
-            color: #00ffee;
-            font-size: 1.8em;
-            font-weight: bold;
-        }
-
-        .slot img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* Tooltip Styles */
-        .tooltip {
-            position: absolute;
-            bottom: 5px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 5px 8px;
-            border-radius: 4px;
-            font-size: 0.8em;
-            white-space: nowrap;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.2s, visibility 0.2s;
-            z-index: 10;
-        }
-
-        .slot:hover .tooltip {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        /* Filter Button Styles */
-        .filters-wrapper {
-            margin-bottom: 20px;
-            text-align: center;
-            display: flex; /* Use flexbox for button layout */
-            flex-wrap: wrap; /* Allow buttons to wrap */
-            justify-content: center; /* Center buttons */
-            gap: 10px; /* Space between buttons */
-        }
-
-        .filters-wrapper button {
-            padding: 8px 15px;
-            border: 1px solid #00ffee;
-            background-color: transparent;
-            color: #00ffee;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-        }
-
-        .filters-wrapper button.active,
-        .filters-wrapper button:hover {
-            background-color: #00ffee;
-            color: #333;
-        }
-
-        /* Tag Filtering Styles */
-        .slot.tag-muted {
-            opacity: 0.3;
-            transform: scale(0.95);
-        }
-        .slot.tag-active {
-            opacity: 1;
-            transform: scale(1);
-        }
-        
-        /* Responsive Adjustments for Mobile */
-        @media (max-width: 768px) {
-            #grid {
-                grid-template-columns: repeat(5, 1fr); /* 5 columns on smaller screens */
-            }
-        }
-
-        @media (max-width: 480px) {
-            #grid {
-                grid-template-columns: repeat(4, 1fr); /* 4 columns on very small screens (portrait) */
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>Premium Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div id="filters" class="filters-wrapper">
-        </div>
-    <div id="grid"></div>
 
-    <script>
-        const grid = document.getElementById('grid');
-        const filtersWrapper = document.getElementById('filters');
+  <!-- 🔍 Filtres par tag -->
+  <div id="filters" style="text-align: center; margin: 1em 0;">
+    <button data-tag="XR">XR</button>
+    <button data-tag="Dev">Développement</button>
+    <button data-tag="musique">Musique</button>
+    <button data-tag="all">Tout afficher</button>
+  </div>
 
-        // Function to send height to parent iframe
-        function sendHeightUpdate() {
-            let height = document.body.scrollHeight || document.documentElement.scrollHeight;
-            // Add a small buffer to height to avoid scrollbars
-            parent.postMessage({ type: 'setHeight', height: height + 20 }, '*');
-        }
+  <!-- 🧱 Grille premium -->
+  <div id="grid" class="grid"></div>
 
-        // --- Main Data Loading and Grid Creation ---
-        fetch('data.json')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(slotData => {
-                // Ensure exactly 100 slots, adding empty ones if necessary
-                for (let i = slotData.length; i < 100; i++) {
-                    slotData.push({ id: i, label: 'Emplacement libre', tag: '' });
-                }
+  <!-- 🌐 Script principal -->
+  <script src="map.js"></script>
 
-                // Collect all unique tags for dynamic filter buttons
-                const allTags = new Set();
-                slotData.forEach(slot => {
-                    if (slot.tag) {
-                        // Ensure tag is always an array for consistent processing
-                        const tags = Array.isArray(slot.tag) ? slot.tag : [slot.tag];
-                        tags.forEach(tag => allTags.add(tag.trim()));
-                    }
-                });
+  <!-- 📏 Ajustement de la hauteur dans l'iframe -->
+  <script>
+    function sendHeight() {
+      const height = document.body.scrollHeight || document.documentElement.scrollHeight;
+      parent.postMessage({ type: 'setHeight', height }, '*');
+    }
 
-                // Create the "All" filter button first
-                const allButton = document.createElement('button');
-                allButton.setAttribute('data-tag', 'all');
-                allButton.classList.add('active'); // 'All' is active by default
-                allButton.textContent = 'Tous';
-                filtersWrapper.appendChild(allButton);
+    window.addEventListener('load', () => {
+      sendHeight();
+      setTimeout(sendHeight, 500);
+      setTimeout(sendHeight, 1500);
+      setTimeout(sendHeight, 3000);
+    });
 
-                // Create filter buttons for each unique tag
-                allTags.forEach(tag => {
-                    if (tag) { // Avoid creating a button for empty tags
-                        const button = document.createElement('button');
-                        button.setAttribute('data-tag', tag);
-                        button.textContent = tag;
-                        filtersWrapper.appendChild(button);
-                    }
-                });
+    new ResizeObserver(() => sendHeight()).observe(document.body);
+  </script>
 
-                // Create grid cells
-                slotData.forEach(slot => {
-                    const cell = document.createElement('div');
-                    cell.className = 'slot';
-
-                    // Set data-tag attribute for filtering.
-                    // If slot.tag is an array, join it with commas. Otherwise, use as is.
-                    if (slot.tag) {
-                        const tagString = Array.isArray(slot.tag) ? slot.tag.join(', ') : slot.tag;
-                        cell.setAttribute('data-tag', tagString);
-                    }
-
-                    // Custom tooltip
-                    const tooltip = document.createElement('div');
-                    tooltip.className = 'tooltip';
-                    let tooltipText = slot.label || 'Emplacement libre';
-                    if (slot.tag) {
-                        tooltipText += ` (${Array.isArray(slot.tag) ? slot.tag.join(', ') : slot.tag})`;
-                    }
-                    tooltip.textContent = tooltipText;
-
-                    // Render slot content
-                    if (slot.image && slot.href) {
-                        const link = document.createElement('a');
-                        link.href = slot.href;
-                        link.target = '_blank';
-                        link.style.display = 'block';
-                        link.style.width = '100%';
-                        link.style.height = '100%';
-                        link.style.position = 'relative';
-
-                        const img = document.createElement('img');
-                        img.src = slot.image;
-                        img.alt = slot.label || '';
-                        // img.onload = () => sendHeightUpdate(); // Re-enable if image loading affects initial height
-
-                        link.appendChild(img);
-                        link.appendChild(tooltip);
-                        cell.appendChild(link);
-                    } else {
-                        cell.classList.add('empty');
-                        cell.textContent = '+';
-                        cell.appendChild(tooltip);
-                    }
-
-                    grid.appendChild(cell);
-                });
-
-                // Activate tag filters
-                const filterButtons = document.querySelectorAll('.filters-wrapper button');
-                filterButtons.forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const selectedTag = btn.getAttribute('data-tag');
-
-                        filterButtons.forEach(b => b.classList.remove('active'));
-                        btn.classList.add('active');
-
-                        document.querySelectorAll('.slot').forEach(slot => {
-                            const tagAttr = slot.getAttribute('data-tag') || '';
-                            const tags = tagAttr.split(',').map(t => t.trim()); // Split for multi-tag support
-
-                            if (selectedTag === 'all') {
-                                slot.classList.remove('tag-active', 'tag-muted');
-                            } else if (tags.includes(selectedTag)) {
-                                slot.classList.add('tag-active');
-                                slot.classList.remove('tag-muted');
-                            } else {
-                                slot.classList.remove('tag-active');
-                                slot.classList.add('tag-muted');
-                            }
-                        });
-
-                        setTimeout(sendHeightUpdate, 300); // Update height after filtering
-                    });
-                });
-
-                // Initial height update after all elements are rendered
-                sendHeightUpdate();
-
-                // Height observers for dynamic content changes
-                new MutationObserver(sendHeightUpdate).observe(grid, { childList: true, subtree: true });
-                new ResizeObserver(sendHeightUpdate).observe(document.body);
-                if (filtersWrapper) {
-                    new ResizeObserver(sendHeightUpdate).observe(filtersWrapper);
-                }
-
-                // Additional recalibrations for robustness
-                setTimeout(sendHeightUpdate, 500);
-                setTimeout(sendHeightUpdate, 1500);
-                setTimeout(sendHeightUpdate, 3000);
-            })
-            .catch(error => console.error('Error fetching slot data:', error));
-
-    </script>
 </body>
 </html>
