@@ -1,9 +1,10 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
-  width: 1000px; /* largeur fixe pour 10 slots */
   gap: 6px;
-  margin: 0 auto;
+  width: 90%;
+  max-width: 900px;
+  margin: auto;
   padding: 20px 0;
 }
 
