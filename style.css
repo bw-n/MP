@@ -1,30 +1,35 @@
-html,
-body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
-    background: transparent;
-    box-sizing: border-box;
-    overflow: hidden;
+/* 🌐 Réinitialisation complète */
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  background: transparent;
+  overflow: hidden;
+}
 
-/* Conteneur grille = carré plein écran */
+/* 🧱 Conteneur principal : grille carrée en plein écran */
 .grid {
-    display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(10, 1fr);
-    gap: 1px;
-    width: 100vmin;
-    /* ⬅️ carré basé sur le plus petit côté */
-    height: 100vmin;
-    margin: auto;
-    background: #000;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+  gap: 1px;
+  width: 100vmin;
+  height: 100vmin;
+  margin: auto;
+  background: #000; /* Fond uniquement dans la grille */
 }
 
-/* Slots carrés 100% de leur cellule */
+/* 🎯 Chaque slot : carré, centré, stylisé */
 .slot {
-    background: #111;
-    border: 1px solid #00ffee;
+  background: #111;
+  border: 1px solid #00ffee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
