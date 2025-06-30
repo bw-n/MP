@@ -4,7 +4,7 @@ body {
     padding: 0;
     height: 100%;
     width: 100%;
-     background: url('https://github.com/bw-n/premium-map/blob/main/images/b94008f4-3267-4c66-a877-4503bc6086b0_CubeLayout2.png?raw=true') center/cover no-repeat;
+    background: transparent;
 }
     box-sizing: border-box;
     overflow: hidden;
