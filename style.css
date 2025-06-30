@@ -1,26 +1,27 @@
 html, body {
   margin: 0;
   padding: 0;
-  height: 100%;
-  width: 100%;
+  height: 100vh;
+  width: 100vw;
   background: transparent;
-  box-sizing: border-box;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
-/* Conteneur grille = carré plein écran */
+/* Grille plein écran fluide (cases légèrement rectangulaires si nécessaire) */
 .grid {
   display: grid;
+  width: 100vw;
+  height: 100vh;
   grid-template-columns: repeat(10, 1fr);
   grid-template-rows: repeat(10, 1fr);
   gap: 1px;
-  width: 100vmin; /* ⬅️ carré basé sur le plus petit côté */
-  height: 100vmin;
-  margin: auto;
-  background: #000;
+  margin: 0;
+  padding: 0;
+  background: transparent;
 }
 
-/* Slots carrés 100% de leur cellule */
+/* Slots visibles uniquement */
 .slot {
   background: #111;
   border: 1px solid #00ffee;
