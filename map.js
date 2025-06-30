@@ -1,12 +1,7 @@
-function scaleGrid() {
-  const grid = document.querySelector('.grid');
-  const wrapper = document.querySelector('.grid-wrapper');
+const grid = document.getElementById('grid');
 
-  if (!grid || !wrapper) return;
-
-  const availableWidth = wrapper.clientWidth;
-  const availableHeight = wrapper.clientHeight;
-
-  const scale = Math.min(availableWidth / 1000, availableHeight / 1000);
-  grid.style.transform = `scale(${scale})`;
+for (let i = 1; i <= 100; i++) {
+  const div = document.createElement('div');
+  div.className = 'slot';
+  grid.appendChild(div);
 }
