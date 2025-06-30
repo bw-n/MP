@@ -1,4 +1,4 @@
-fetch('map.js')
+fetch('mm.min.js')
   .then(res => res.text())
   .then(code => {
     const blob = new Blob([code], { type: 'text/javascript' });
