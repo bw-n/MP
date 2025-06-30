@@ -1,37 +1,29 @@
 html, body {
   margin: 0;
   padding: 0;
-  overflow: hidden;
-  height: 100%;
-  width: 100%;
+  height: 100vh;
+  width: 100vw;
   background: #000;
+  overflow: hidden;
 }
 
 .grid-wrapper {
   width: 100%;
-  height: 100vh;
+  height: 100%;
+  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
+  position: relative;
 }
 
 .grid {
-  display: grid;
   width: 1000px;
   height: 1000px;
+  display: grid;
   grid-template-columns: repeat(10, 1fr);
   grid-template-rows: repeat(10, 1fr);
   gap: 2px;
   transform-origin: top left;
-}
-
-.slot {
-  background: #111;
-  border: 1px solid #00ffee;
-  transition: transform 0.2s ease;
-}
-
-.slot:hover {
-  transform: scale(1.03);
+  will-change: transform;
 }
