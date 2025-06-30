@@ -1,22 +1,25 @@
+/* 🌐 Reset général */
 html, body {
   margin: 0;
   padding: 0;
-  height: 100vh;
   width: 100vw;
-  background: #000;
+  height: 100vh;
   overflow: hidden;
+  background: #000;
+  font-family: sans-serif;
 }
 
+/* 🧱 Conteneur central */
 .grid-wrapper {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
+  width: 100vw;
+  height: 100svh; /* ✅ Hauteur réelle sur mobile (prend en compte barre système) */
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
+  overflow: hidden;
 }
 
+/* 🎯 Grille fixe en pixels, mise à l’échelle via JS */
 .grid {
   width: 1000px;
   height: 1000px;
@@ -26,4 +29,19 @@ html, body {
   gap: 2px;
   transform-origin: top left;
   will-change: transform;
+}
+
+/* 🟦 Slots visuels */
+.slot {
+  background: #111;
+  border: 1px solid #00ffee;
+  transition: transform 0.2s ease;
+}
+
+/* ✨ Effet au survol (desktop uniquement) */
+@media (hover: hover) {
+  .slot:hover {
+    transform: scale(1.05);
+    z-index: 2;
+  }
 }
