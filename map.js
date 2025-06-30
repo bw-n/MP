@@ -1,8 +1,11 @@
-const grid = document.getElementById('grid');
-
-for (let i = 1; i <= 100; i++) {
-  const div = document.createElement('div');
-  div.className = 'slot';
-  div.textContent = i; // 👉 pour qu’on voie les cases
-  grid.appendChild(div);
+function scaleGrid() {
+  const grid = document.querySelector('.grid');
+  const scale = Math.min(
+    window.innerWidth / 1000,
+    window.innerHeight / 1000
+  );
+  grid.style.transform = `scale(${scale})`;
 }
+
+window.addEventListener('resize', scaleGrid);
+window.addEventListener('load', scaleGrid);
