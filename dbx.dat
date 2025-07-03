@@ -4,20 +4,20 @@
     "label": "Blockchain Workers",
     "image": "https://www.weebly.com/editor/uploads/9/7/1/8/9718598/custom_themes/990953050610449310/files/logo_BW_WEB_200x200.jpg",
     "href": "https://www.blockchain-workers.com",
-    "tag": "Dev"
+    "tag": ["Dev", "XR", "Logistic"]
   },
   {
     "id": 1,
     "label": "JOWEL",
     "image": "https://www.jow-l.com/uploads/9/7/1/8/9718598/published/homeskillz-450px-2017-discogs.jpg?1716919812",
     "href": "https://jow-l.com",
-    "tag": ["Dev", "XR", "musique"]
+    "tag": ["Dev", "XR", "Logistic", "musique"]
   },
   {
     "id": 2,
     "label": "Ethabo Jackson",
     "image": "https://github.com/bw-n/JWL/blob/main/IMG_20250701_215001_554.jpg?raw=true",
     "href": "https://www.instagram.com/ethabojackson/?igsh=MW9xM3IzcmE3MHN0Yw%3D%3D#",
-    "tag": ["Security Bodyguard", "Logistic"]
+    "tag": ["Security Bodyguard", "musique", "Logistic"]
   }
 ]
